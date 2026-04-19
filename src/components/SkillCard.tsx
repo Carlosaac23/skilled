@@ -35,7 +35,7 @@ export default function SkillCard({
             <img src='/logo512.png' alt='author avatar' className='avatar' />
             <div className='authory-copy'>
               <p>Adrian</p>
-              <p>{new Date(createdAt as string).toLocaleDateString()}</p>
+              <p>{createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown date'}</p>
             </div>
           </div>
 
