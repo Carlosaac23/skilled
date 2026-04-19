@@ -40,7 +40,7 @@ function App() {
           <h2>
             Recently Created <span className='text-gradient'>Skills</span>{' '}
           </h2>
-          <p>Latest skills loaded from database in decending creation order.</p>
+          <p>Latest skills loaded from database in descending creation order.</p>
         </div>
 
         <div>
