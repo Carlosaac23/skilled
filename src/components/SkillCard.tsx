@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowBigUp, ArrowUpRight, Bookmark, Check, Copy, MessageSquare } from 'lucide-react';
+import { usePostHog } from 'posthog-js/react';
 
 import { useCopy } from '@/hooks/useCopy';
 
@@ -12,7 +13,8 @@ export default function SkillCard({
   tags,
   title,
 }: SkillRecord) {
-  const { copied, handleCopy } = useCopy(installCommand);
+  const { copied, handleCopy } = useCopy({ title, category, installCommand });
+  const posthog = usePostHog();
 
   return (
     <article className='skill-card'>
@@ -79,7 +81,14 @@ export default function SkillCard({
           </div>
 
           <div className='actions'>
-            <Link to='/skills' className='open' title={`Open ${title}`}>
+            <Link
+              to='/skills'
+              className='open'
+              title={`Open ${title}`}
+              onClick={() =>
+                posthog.capture('skill_opened', { skill_title: title, skill_category: category })
+              }
+            >
               <span>Open</span>
               <ArrowUpRight size={14} />
             </Link>
