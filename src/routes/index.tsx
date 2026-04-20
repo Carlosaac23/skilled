@@ -14,8 +14,8 @@ const getSkillsFn = createServerFn({ method: 'GET' }).handler(async () => {
 
     return data.skills;
   } catch (error) {
-    console.error(error);
-    return [];
+    console.error('getSkillsFn failed', { error });
+    throw new Error('Failed to load skills');
   }
 });
 
