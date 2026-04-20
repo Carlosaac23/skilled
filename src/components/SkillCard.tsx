@@ -2,17 +2,21 @@ import { Link } from '@tanstack/react-router';
 import { ArrowBigUp, ArrowUpRight, Bookmark, Check, Copy, MessageSquare } from 'lucide-react';
 import { usePostHog } from 'posthog-js/react';
 
+import type { GetSkillsData } from '@/dataconnect-generated';
+
 import { useCopy } from '@/hooks/useCopy';
 
+type SkillCardProps = GetSkillsData['skills'][number];
+
 export default function SkillCard({
-  authorEmail,
-  category,
   createdAt,
   description,
   installCommand,
   tags,
   title,
-}: SkillRecord) {
+  author,
+}: SkillCardProps) {
+  const category = tags[0] ?? 'General';
   const { copied, handleCopy } = useCopy({ title, category, installCommand });
   const posthog = usePostHog();
 
@@ -34,9 +38,13 @@ export default function SkillCard({
       <div className='body'>
         <div className='meta'>
           <div className='author'>
-            <img src='/logo512.png' alt='author avatar' className='avatar' />
-            <div className='authory-copy'>
-              <p>Adrian</p>
+            <img
+              src={author.imageUrl || '/logo512.png'}
+              alt={`${author.username} avatar`}
+              className='avatar'
+            />
+            <div className='author-copy'>
+              <p>{author.username}</p>
               <p>{createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown date'}</p>
             </div>
           </div>
@@ -76,7 +84,7 @@ export default function SkillCard({
 
             <div className='comments'>
               <MessageSquare size={14} />
-              <span>{authorEmail ? 1 : 0}</span>
+              <span>{author.email ? 1 : 0}</span>
             </div>
           </div>
 
