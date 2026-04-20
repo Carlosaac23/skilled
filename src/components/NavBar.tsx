@@ -1,7 +1,11 @@
+import { Show, UserButton } from '@clerk/tanstack-react-start';
 import { Link } from '@tanstack/react-router';
 import { LogIn } from 'lucide-react';
+import { usePostHog } from 'posthog-js/react';
 
 export default function NavBar() {
+  const posthog = usePostHog();
+
   return (
     <nav className='navbar'>
       <div className='brand'>
@@ -14,10 +18,20 @@ export default function NavBar() {
       </div>
 
       <div className='actions'>
-        <Link to='/sign-in/$' className='btn-primary'>
-          <LogIn size={16} />
-          Sign in
-        </Link>
+        <Show when='signed-in'>
+          <UserButton />
+        </Show>
+
+        <Show when='signed-out'>
+          <Link
+            to='/sign-in/$'
+            className='btn-primary'
+            onClick={() => posthog.capture('sign_in_clicked')}
+          >
+            <LogIn size={16} />
+            Sign In
+          </Link>
+        </Show>
       </div>
     </nav>
   );

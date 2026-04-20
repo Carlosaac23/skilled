@@ -1,15 +1,33 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
+import { createServerFn } from '@tanstack/react-start';
 import { Terminal } from 'lucide-react';
+import { usePostHog } from 'posthog-js/react';
 
 import SkillCard from '@/components/SkillCard';
-import { dummySkills } from '@/lib/dummy-skills';
+import { getSkills } from '@/dataconnect-generated';
+import { dataConnect } from '@/lib/firebase';
+
+const getSkillsFn = createServerFn({ method: 'GET' }).handler(async () => {
+  try {
+    const { data } = await getSkills(dataConnect, { searchTerm: '', limit: 10 });
+
+    return data.skills;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+});
 
 export const Route = createFileRoute('/')({
   component: App,
+  loader: () => getSkillsFn(),
 });
 
 function App() {
+  const posthog = usePostHog();
+  const skills = Route.useLoaderData();
+
   return (
     <div id='home'>
       <section className='hero'>
@@ -25,11 +43,19 @@ function App() {
         </div>
 
         <div className='actions'>
-          <Link to='/skills' className='btn-primary'>
+          <Link
+            to='/skills'
+            className='btn-primary'
+            onClick={() => posthog.capture('browse_registry_clicked')}
+          >
             <Terminal size={18} />
             <span>Browse Registry</span>
           </Link>
-          <Link to='/skills/new' className='btn-secondary'>
+          <Link
+            to='/skills/new'
+            className='btn-secondary'
+            onClick={() => posthog.capture('publish_skill_clicked')}
+          >
             Publish Skill
           </Link>
         </div>
@@ -40,13 +66,13 @@ function App() {
           <h2>
             Recently Created <span className='text-gradient'>Skills</span>{' '}
           </h2>
-          <p>Latest skills loaded from database in decending creation order.</p>
+          <p>Latest skills loaded from database in descending creation order.</p>
         </div>
 
         <div>
-          {dummySkills.length > 0 ? (
+          {skills.length > 0 ? (
             <div className='skills-grid'>
-              {dummySkills.map(skill => (
+              {skills.map(skill => (
                 <SkillCard key={skill.id} {...skill} />
               ))}
             </div>
