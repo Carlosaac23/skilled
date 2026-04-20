@@ -4,7 +4,7 @@ mutation {
   skill_insert(
     data: {
       id: "11111111222233334444555555555558"
-      authorClerkId: "user_3CayUXOlCLmHPnVbukw6ct6qQQ1"
+      author: { clerkId: "user_3CayUXOlCLmHPnVbukw6ct6qQQ1" }
       createdAt: "2026-04-20T00:44:52.632Z"
       description: "Identify render bottlenecks and optimize expensive client-side work."
       installCommand: "npx skild add performance-tuner"

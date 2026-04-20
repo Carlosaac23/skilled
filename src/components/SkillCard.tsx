@@ -40,11 +40,11 @@ export default function SkillCard({
           <div className='author'>
             <img
               src={author.imageUrl || '/logo512.png'}
-              alt={`${author.username} avatar`}
+              alt={`${author.username ?? 'User'} avatar`}
               className='avatar'
             />
             <div className='author-copy'>
-              <p>{author.username}</p>
+              <p>{author.username ?? 'Anonymous'}</p>
               <p>{createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown date'}</p>
             </div>
           </div>
