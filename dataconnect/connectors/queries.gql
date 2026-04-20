@@ -16,7 +16,6 @@ query GetSkills($searchTerm: String = "", $limit: Int = 10)
     author {
       username
       imageUrl
-      clerkId
       email
     }
   }
